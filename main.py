@@ -145,7 +145,7 @@ def main(number_seed, data_folder, susceptible,
                     zip(infected_school.work_id, infected_school.sp_id)
                 )
 
-        # TODO: считать incidence до обновления счетчиков или после?
+        # TODO: разбивку по штаммам
         newly_infected = len(
             susceptible[(susceptible.illness_day == 0) & (susceptible.infected != 0)])
         curr_infected = int(susceptible[['infected']].sum())
@@ -161,6 +161,8 @@ def main(number_seed, data_folder, susceptible,
 
         # обновление параметров
         susceptible.loc[susceptible.infected != 0, 'illness_day'] += 1
+        for key in strains_keys:
+            susceptible.loc[susceptible.illness_day > 8, ['susceptible_'+key]] = 0
         susceptible.loc[susceptible.illness_day > 8, ['infected', 'illness_day']] = 0
 
 
